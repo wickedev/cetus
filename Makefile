@@ -1,5 +1,7 @@
-all: install
-	go build -o dist/main
+all: cli
+
+cli:
+	go build -o dist/cetus pkg/cli/main.go
 
 install:
 	go mod vendor
