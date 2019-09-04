@@ -1,17 +1,8 @@
-package main // import "github.com/wickedev/cetus"
 
-import (
-	"fmt"
+package main // import github.com/wickedev/cetus/pkg/cli 
 
-	"k8s.io/helm/pkg/proto/hapi/version"
-)
+import "github.com/wickedev/cetus/pkg/cli/cmd"
 
 func main() {
-	var v version.Version = version.Version{
-		SemVer:       "SemVer",
-		GitCommit:    "GitCommit",
-		GitTreeState: "GitTreeState",
-	}
-
-	fmt.Println(v.String())
+  cmd.Execute()
 }
