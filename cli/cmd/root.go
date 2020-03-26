@@ -27,6 +27,15 @@ to quickly create a Cobra application.`,
 	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print the version number of Hugo",
+	Long:  `All software has versions. This is Hugo's`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Hugo Static Site Generator v0.9 -- HEAD")
+	},
+}
+
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
@@ -38,6 +47,8 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+
+	rootCmd.AddCommand(versionCmd)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,

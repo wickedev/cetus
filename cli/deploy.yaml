@@ -1,0 +1,64 @@
+version: v1beta1
+name: app
+app_version: 1.0.0
+images:
+  app:
+    dockerfile: dockerfiles/app.dockerfile
+services:
+  database:
+    chart:
+      name: stable/postgresql
+      version: '8.1.4'
+      values:
+        postgresqlDatabase: ${DB_NAME}
+        postgresqlUsername: ${DB_USER}
+        postgresqlPassword: ${DB_PASSWORD}
+  app:
+    image: '@images.app'
+    depends_on:
+      - database
+    labels:
+      - variation: promotion
+    ingress:
+      tls: true
+      rules:
+        - host: ${HOSTNAME}
+    ports:
+      - port: 8080:80
+    environment:
+      AUTH_HOSTNAME: '@dependencies.auth'
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    deploy:
+      strategy: ab
+      variations:
+        - labels:
+            - variation: default
+          weight: 50
+        - labels:
+            - variation: promotion
+          weight: 50
+dev:
+  database:
+    target: !services.database
+    forward:
+      - port: 5432
+  app:
+    target: !services.app
+    forward:
+      - port: 8080
+dependencies:
+  auth:
+    source:
+      git: https://github.com/auth-api
+vars:
+  - name: DB_NAME
+    question: 'enter your database name:'
+  - name: DB_USER
+    question: 'enter your database user:'
+  - name: DB_PASSWORD
+    question: 'enter your database password:'
+    secret: true
+  - name: HOSTNAME
+    question: 'enter your host name:'
