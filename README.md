@@ -12,11 +12,11 @@
 
 ## 명시적인 정보
 
-- 아래 정보는 \<project root\>/cetus.yaml에 개발자가 작성한다.
+- 아래 정보는 \<project root\>/cetus.yaml 파일에 개발자가 작성한다.
 - images: build 명령어 실행시 빌드될 이미지 정보
 - services: 배포될 서비스들(k8s deployment + service로 구성)
 - dependencies: 의존성을 가지는 외부 서비스(git, path를 지원한다)
-- profiles: patch(rfc6902), replace를 지원하여 
+- profiles: patch(rfc6902), replace를 지원하여 cetus.yaml의 값들을 수정하여 배포 할 수 있다.
 - dev: 개발시 필요한 설정들
 - test: 배포 후 확인 커맨드 실행. 실패할 경우 기존 버전으로 rollback 된다.
 - vars: file, env, stdin 입력을 받아 cetus.yaml 내에서 사용 할 수 있다.
@@ -29,10 +29,11 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 ### 인프라 초기화
 
 - cetus install (options)
+    - 설치시 대화형으로 어드민 계정/비밀번호를 입력한다.
     - --domain 옵션에 도메인을 제공하면 제공된 URL로 cetus 대시보드에 접근 가능하다.
     - --domain 을 지정하지 않더라도 아래와 같이 임의의 도메인이 제공된다.
         - 예) https://5c7110be.cetus.dev
-    - ㅇ
+    - 대시보드에서는 사용자, 인증, 네임스페이스, 모니터링,
 
 ### 프로젝트 초기화
 
