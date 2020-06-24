@@ -29,7 +29,7 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 ### 인프라 초기화
 
 - cetus install (options)
-    - --domain 옵션에 도메인을 제공하면 해당 URL로 cetus 대시보드에 접근 가능하다.
+    - --domain 옵션에 도메인을 제공하면 제공된 URL로 cetus 대시보드에 접근 가능하다.
     - --domain 을 지정하지 않더라도 아래와 같이 임의의 도메인이 제공된다.
         - 예) https://5c7110be.cetus.dev
     - ㅇ
