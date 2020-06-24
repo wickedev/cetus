@@ -1,5 +1,8 @@
 # Cetus
 
+## 개요
+
+
 ## 암묵적인 정보
 
 - 아래 정보는 프로젝트의 .cetus/config에 저장된다.
@@ -21,13 +24,25 @@
 
 ## 초기화
 
+cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초기화 할 수 있다. 로컬에서 배포하려면 cetus init 만으로 시작 할 수 있지만, 배포하려면 인프라가 필요하다. 인프라를 초기화하면 명령어를 실행한 로컬의 쿠버네티스 클러스터에 필요한 리소스 및 컨트롤 플레인을 설치하며, 제공된 대시보드 UI에서 github 혹은 gitlab 처럼 그룹/유저별로 네임스페이스를 만들어 로컬 프로젝트에 네임스페이스를 추가 할 수 있다.
+
+### 인프라 초기화
+
+- cetus install (options)
+    - --domain 옵션에 도메인을 제공하면 해당 URL로 cetus 대시보드에 접근 가능하다.
+    - --domain 을 지정하지 않더라도 아래와 같이 임의의 도메인이 제공된다.
+        - 예) https://5c7110be.cetus.dev
+    - ㅇ
+
+### 프로젝트 초기화
+
 - cetus init
 - cetus namespace add staging https://5c7110be.cetus.dev/wickedev/bookinfo
     - 배포시 클러스터 내에서는 wickedev--bookinfo k8s 네임스페이스를 가짐
 - cetus namespace add prod https://5c7110be.cetus.dev/demo/bookinfo
     - 배포시 클러스터 내에서는 demo--bookinfo k8s 네임스페이스를 가짐
 
-## 개발시
+## 개발
 
 - cetus dev [cluster]
 - [cluster] 인자 없이 실행 할 경우 로컬에 배포되며, 클러스터를 지정하여
@@ -36,11 +51,12 @@
     - 가령 postgresql 서비스가 로컬 30423 포트에 바인딩 되었다면, POSTGRESQL_SERVICE_HOST는 localhost, POSTGRESQL_SERVICE_PORT는 30423이다.
     - 해당 환경 변수는 어플리케이션을 실행하는 프로세스에만 바인딩 된다.
 
-## 배포시
+## 배포
 
 - cetus deploy staging
 - cetus deploy prod
-- deloy 호출 전에 publish(build, push), 호출 후에는 test가 불려진다.
+- deploy 호출 시 인증 정보를 요구 할 수 있다. 인증은 user + password 혹은 token(base65 encoded x509)
+- deploy 호출 전에 publish(build, push), 호출 후에는 test가 불려진다.
 - publish, build, push는 git 과 .cetus/cache 을 참조하여 캐시, 빌드, 버전을 결정한다.
     - 버전은 (branch)-(8 length git hash) 이다. 예시 master-1we09e41
     - 기본 동작은 git에 커밋된 코드만 빌드하지만 --force 플래그를 사용하면 커밋되지 않은 코드를 포함하며 버전 +(revision)이 붙는다. 예시 master-1we09e41+1
