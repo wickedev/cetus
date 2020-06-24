@@ -45,7 +45,7 @@
     - 버전은 (branch)-(8 length git hash) 이다. 예시 master-1we09e41
     - 기본 동작은 git에 커밋된 코드만 빌드하지만 --force 플래그를 사용하면 커밋되지 않은 코드를 포함하며 버전 +(revision)이 붙는다. 예시 master-1we09e41+1
 - cetus test
-    - 
+    - cetus.yaml에 명시한 테스트를 수행하고 테스트에 실패할 시 기존에 성공한 버전이 있으면 이전으로 rollback 한다.
 
 ## 롤백
 
