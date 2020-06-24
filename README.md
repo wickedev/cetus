@@ -1,4 +1,4 @@
-# Cetus (주의: 아래 문서는 컨셉에 대한 것으로써 구현되지 않았습니다)
+# Cetus (주의: 아래 문서는 컨셉에 대한 것으로 구현체가 없습니다)
 
 쿠버네티스는 확장성이 높지만, 많은 세부 기술들(service mesh, image registry, cni plugin, container runtime 등)이 별도 프로젝트로 산재해 있어 러닝커브가 크고 관리가 쉽지 않습니다. 때문에 [2019 KubeCon & CloudNativeCon 설문 결과](https://thenewstack.io/ux-is-kubernetes-biggest-short-term-challenge/?fbclid=IwAR1Olut6i5Ekf4TQ3-QQ7P5jEaYNuan3s73ndzV8HOXf6Yc06Hu_QjtIkxk) 많은 운영자들과 개발자들이 유저 경험(UX)이 해결해야할 중요 단기 과제라고 답했습니다.
 
