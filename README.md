@@ -7,8 +7,9 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 ## 암묵적인 컨텍스트
 
 - 아래 정보는 프로젝트의 .cetus/config에 저장
-- cluster space (user or group)
+- cluster space
 - image registry
+    - 이미지 레지스트리는 space에서 유추되며 배포하는 space의 사용자 혹은 그룹 단위로 공유
 - .cetus/cache 디렉토리 아래에 build에 관련된 캐시가 저장
 
 ## 명시적인 설정
