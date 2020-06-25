@@ -1,8 +1,8 @@
 # Cetus (주의: 아래 문서는 컨셉으로 아직 구현체가 없습니다)
 
-쿠버네티스는 확장성이 높지만, 많은 세부 기술들(service mesh, image registry, cni plugin, container runtime 등)이 별도 프로젝트로 산재해 있어 러닝커브가 크고 관리가 쉽지 않습니다. 때문에 [2019 KubeCon & CloudNativeCon 설문 결과](https://thenewstack.io/ux-is-kubernetes-biggest-short-term-challenge/?fbclid=IwAR1Olut6i5Ekf4TQ3-QQ7P5jEaYNuan3s73ndzV8HOXf6Yc06Hu_QjtIkxk) 많은 운영자들과 개발자들이 유저 경험(UX)이 해결해야할 중요 단기 과제라고 답했습니다.
+쿠버네티스는 확장성이 높지만, 많은 세부 기술들(service mesh, image registry, package manager, serverless, monitoring, logging, cni plugin, container runtime 등)이 별도 프로젝트로 산재해 있어 러닝커브가 크고 관리가 쉽지 않습니다. 때문에 [2019 KubeCon & CloudNativeCon 설문 결과](https://thenewstack.io/ux-is-kubernetes-biggest-short-term-challenge/?fbclid=IwAR1Olut6i5Ekf4TQ3-QQ7P5jEaYNuan3s73ndzV8HOXf6Yc06Hu_QjtIkxk) 많은 운영자들과 개발자들이 유저 경험(UX)이 해결해야할 중요 단기 과제라고 답했습니다.
 
-Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게 더 나은 UX를 제공하는 통합 컨테이너 환경(Integrated Container Environment)으로써 운영 측면에서는 기본적으로 제공하는 기능 이외에 멀티테넌시(CaaS multitenancy model 2), HNC(Hierarchical Namespace Controller) for Group, 인증/인가, OIDC, 모니터링, 로깅, 트레이싱, 다양한 배포(A/B 테스팅, 카나리, Blue/Green), 서킷 브레이커, 이미지 레지스트리, 승인 제어(Admission Control), 정책 제어(Policy Control), 쉬운 노드/스토리지 추가/삭제, 백업/복구를 제공하며, 개발 측면에서는 로컬 개발과 배포 환경의 간극을 줄이고, 다른 개발자가 작성한 서비스를 의존성으로 추가하여 쉽게 사용할 수 있으며, 간결한 배포 설정, 로깅 및 트레이싱 및 로컬 UI를 통해 버그를 쉽게 추적하여 수정할 수 있도록 돕습니다.
+Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게 더 나은 UX를 제공하는 통합 컨테이너 환경(Integrated Container Environment)으로써 운영 측면에서는 쿠버네티스에서 기본적으로 제공하는 기능 이외에 멀티테넌시(CaaS multitenancy model 2), 인증/인가, OIDC, 모니터링, 로깅, 트레이싱, 다양한 배포(A/B 테스팅, 카나리, Blue/Green), 서킷 브레이커, 이미지 레지스트리, 승인 제어(Admission Control), 정책 제어(Policy Control), 쉬운 노드/스토리지 추가/삭제, 백업/복구를 제공하며, 개발 측면에서는 로컬 개발과 배포 환경의 간극을 줄이고, 다른 개발자가 작성한 서비스를 의존성으로 추가하여 쉽게 사용할 수 있으며, 직관적인 배포 설정(cetus.yaml), 로깅 및 트레이싱 및 로컬 UI를 통해 버그를 쉽게 추적하여 수정할 수 있도록 합니다.
 
 ## 암묵적인 컨텍스트
 
@@ -21,6 +21,7 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 - dev: 개발시 필요한 설정들
 - test: 배포 후 확인 커맨드 실행. 실패할 경우 기존 버전으로 rollback 된다.
 - vars: file, env, stdin 입력을 받아 cetus.yaml 내에서 사용 할 수 있다.
+- jobs: 
 - ingress: 외부에서 domain으로 서비스에 접근할 수 있다.
 
 ## 초기화
@@ -46,19 +47,21 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 
 ## 개발
 
-- cetus dev [cluster]
-- [cluster] 인자 없이 실행 할 경우 로컬에 배포되며, 클러스터를 지정하여
+- cetus dev (alias)
 - 해당 어플리케이션을 제외하고, 의존성이 있는 서비스(DB, MQ, 마이크로서비스 등)을 로컬 쿠버네티스 클러스에 배포한다.
+- (alias) 인자 없이 실행 할 경우 로컬에 배포되며, 클러스터를 지정하여 배포할 수 있다.
 - 배포된 각 서비스를 로컬 프로세스 0번 포트에 바인딩 하여 임의로 할당한 뒤, 현재 프로세스 환경 변수에 바인딩 한다.
     - 가령 postgresql 서비스가 로컬 30423 포트에 바인딩 되었다면, POSTGRESQL_SERVICE_HOST는 localhost, POSTGRESQL_SERVICE_PORT는 30423이다.
     - 해당 환경 변수는 어플리케이션을 실행하는 프로세스에만 바인딩 된다.
 
 ## 배포
 
+- cetus deploy [alias]
 - cetus deploy staging
 - cetus deploy prod
+
 - deploy 호출 시 인증 정보를 요구 할 수 있다. 인증은 user + password 혹은 token(base65 encoded x509)
-- deploy 호출 전에 publish(build, push), 호출 후에는 test가 불려지며 실패할 경우 rollback이 수행된다.
+- deploy 호출 전에 이미지 publish(build, push), 호출 후에는 test가 불려지며 실패할 경우 rollback이 수행된다.
 - publish, build, push는 git 과 .cetus/cache 을 참조하여 캐시, 빌드, 버전을 결정한다.
     - 버전은 (branch)-(8 length git hash) 이다. 예시 master-1we09e41
     - 기본 동작은 git에 커밋된 코드만 빌드하지만 --force 플래그를 사용하면 커밋되지 않은 코드를 포함하며 버전 +(revision)이 붙는다. 예시 master-1we09e41+1
@@ -67,31 +70,32 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 
 ## 롤백
 
-- cetus status [namespace]
+- cetus status [alias]
     - k8s resources 및 그 상태 (uptime, age, restart, status)
-- cetus history [namespace]
+- cetus history [alias]
     - 지금까지 배포된 버전 목록
-- cetus rollback [namespace] (version)
+- cetus rollback [alias] (version)
     - 버전을 지정하지 않을 경우 대화식으로 선택 제공
-
 
 ## 디버깅
 
-- cetus debug [namespace] (pod) (-c [container])
+- cetus debug [alias] (pod) (-c [container])
     - 최근 컨테이너가 죽었을 당시 pod log 및 events 출력
-- cetus exec [namespace] (pod) (-c [container]) -- [exec]
+- cetus exec [alias] (pod) (-c [container]) -- [exec]
     - 예) cetus exec staging -- ls -al
     - 컨테이너를 지정하지 않을 경우 대화식으로 선택 제공
-- cetus attach [namespace] (pod) (-c [container])
+- cetus attach [alias] (pod) (-c [container])
     - 예) cetus attach staging
     - 컨테이너를 지정하지 않을 경우 대화식으로 선택 제공
-- cetus logs (options) [namespace] (pod) (-c [container])
+- cetus logs (options) [alias] (pod) (-c [container])
     - 예) cetus logs -f staging
     - 컨테이너를 지정하지 않을 경우 namespace의 전체 로그 (주입된 사이드카 제외)
-- cetus curl [url]
+- cetus curl (-n [alias]) [url]
     - 클러스터 URL(svc.cluster.local) 혹은 도메인으로 클러스터 내부에 curl을 수행
     - 예) cetus curl http://bookinfo.wickedev--bookinfo.svc.cluster.local
     - 예) cetus curl https://staging.bookinfo.5c7110be.cetus.dev
+    - 예) cetus curl -n wickedev/bookinfo BOOKINFO_SERVICE_HOST
+    - 예) cetus curl -n staging BOOKINFO_SERVICE_HOST:8080
 
 ## 기타
 
