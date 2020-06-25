@@ -71,7 +71,9 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
     - k8s resources 및 그 상태 (uptime, age, restart, status)
 - cetus history [namespace]
     - 지금까지 배포된 버전 목록
-- cetus rollback [namespace] [version]
+- cetus rollback [namespace] (version)
+    - 버전을 지정하지 않을 경우 대화식으로 선택 제공
+
 
 ## 디버깅
 
