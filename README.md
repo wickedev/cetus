@@ -16,7 +16,7 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 - 아래 정보는 \<project root\>/cetus.yaml 파일에 개발자가 작성한다.
 - images: build 명령어 실행시 빌드될 이미지 정보
 - services: 배포될 서비스들(k8s deployment + service로 구성)
-- dependencies: 의존성을 가지는 외부 서비스(git, path를 지원한다)
+- dependencies: 의존성을 가지는 외부 서비스(git, path 참조를 지원)
 - profiles: patch(rfc6902), replace를 지원하여 cetus.yaml의 값들을 수정하여 배포 할 수 있다.
 - dev: 개발시 필요한 설정들
 - test: 배포 후 확인 커맨드 실행. 실패할 경우 기존 버전으로 rollback 된다.
