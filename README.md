@@ -2,12 +2,12 @@
 
 쿠버네티스는 확장성이 높지만, 많은 세부 기술들(service mesh, image registry, package manager, serverless, monitoring, logging, cni plugin, container runtime 등)이 별도 프로젝트로 산재해 있어 러닝커브가 크고 관리가 쉽지 않습니다. 때문에 [2019 KubeCon & CloudNativeCon 설문 결과](https://thenewstack.io/ux-is-kubernetes-biggest-short-term-challenge/?fbclid=IwAR1Olut6i5Ekf4TQ3-QQ7P5jEaYNuan3s73ndzV8HOXf6Yc06Hu_QjtIkxk) 많은 운영자들과 개발자들이 유저 경험(UX)이 해결해야할 중요 단기 과제라고 답했습니다.
 
-Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게 더 나은 UX를 제공하는 통합 컨테이너 환경(Integrated Container Environment)으로써 운영 측면에서는 쿠버네티스에서 기본적으로 제공하는 기능 이외에 멀티테넌시(CaaS multitenancy model 2), 인증/인가, OIDC, 모니터링, 로깅, 트레이싱, 다양한 배포(A/B 테스팅, 카나리, Blue/Green), 서킷 브레이커, 이미지 레지스트리, 승인 제어(Admission Control), 정책 제어(Policy Control), 쉬운 노드/스토리지 추가/삭제, 백업/복구를 제공하며, 개발 측면에서는 로컬 개발과 배포 환경의 간극을 줄이고, 다른 개발자가 작성한 서비스를 의존성으로 추가하여 쉽게 사용할 수 있으며, 직관적인 배포 설정(cetus.yaml), 로깅 및 트레이싱 및 로컬 UI를 통해 버그를 쉽게 추적하여 수정할 수 있도록 합니다.
+Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게 더 나은 UX를 제공하는 통합 컨테이너 환경(Integrated Container Environment)으로써 운영 측면에서는 쿠버네티스에서 기본적으로 제공하는 기능 이외에 멀티테넌시(CaaS multitenancy model 2), 인증/인가, OIDC, 모니터링, 로깅, 트레이싱, 다양한 배포(A/B 테스팅, 카나리, Blue/Green), 서킷 브레이커, 이미지 레지스트리, 승인과 정책 제어(Admission & Policy Control), 쉬운 노드/스토리지 추가/삭제, 백업/복구를 제공하며, 개발 측면에서는 로컬 개발과 배포 환경의 간극을 줄이고, 다른 개발자가 작성한 서비스를 의존성으로 추가하여 쉽게 사용할 수 있으며, 직관적인 배포 설정(cetus.yaml), 로깅 및 트레이싱 및 로컬 UI를 통해 버그를 쉽게 추적하여 수정할 수 있도록 합니다.
 
 ## 암묵적인 컨텍스트
 
 - 아래 정보는 프로젝트의 .cetus/config에 저장된다.
-- cluster namespace (user or group)
+- cluster space (user or group)
 - image registry
 - .cetus/cache 디렉토리 아래에 build에 관련된 캐시가 저장된다.
 
@@ -21,7 +21,6 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 - dev: 개발시 필요한 설정들
 - test: 배포 후 확인 커맨드 실행. 실패할 경우 기존 버전으로 rollback 된다.
 - vars: file, env, stdin 입력을 받아 cetus.yaml 내에서 사용 할 수 있다.
-- jobs: 
 - ingress: 외부에서 domain으로 서비스에 접근할 수 있다.
 
 ## 초기화
@@ -40,9 +39,10 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 ### 프로젝트 초기화
 
 - cetus init
-- cetus namespace add staging https://5c7110be.cetus.dev/wickedev/bookinfo
+- cetus namespace add [alias] [space url]
+- 예) cetus namespace add staging https://5c7110be.cetus.dev/wickedev/bookinfo
     - 배포시 클러스터 내에서는 wickedev--bookinfo k8s 네임스페이스를 가짐
-- cetus namespace add prod https://5c7110be.cetus.dev/demo/bookinfo
+- 예) cetus namespace add prod https://5c7110be.cetus.dev/demo/bookinfo
     - 배포시 클러스터 내에서는 demo--bookinfo k8s 네임스페이스를 가짐
 
 ## 개발
