@@ -16,6 +16,7 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 
 - 아래 정보는 \<project root\>/cetus.yaml 파일에 개발자가 작성
 - images: build 명령어 실행시 빌드될 이미지 정보
+    - before, after 훅을 선언하여 빌드 및 후처리를 할 수 있음
 - services: 배포될 서비스들(k8s deployment + service로 구성)
 - dependencies: 의존성을 가지는 외부 서비스(git, path 참조를 지원)
 - profiles: patch(rfc6902), replace를 지원하여 cetus.yaml의 값들을 수정하여 배포
@@ -26,6 +27,22 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 - test: 배포 후 확인 커맨드 실행. 실패할 경우 기존 버전으로 rollback
 - vars: file, env, stdin 입력을 받아 cetus.yaml 내에서 사용
 - ingress: 외부에서 domain으로 서비스에 접근
+- resources: 다른 패키지에 의존성으로 제공 될 경우
+    ```yaml
+    # other cetus.yaml
+    resources:
+      - name: stub
+        type: grpc 
+        path:
+          - src/**/*.proto
+    --- 
+    # my cetus.yaml
+    dependencies:
+      - source:
+          git: https://github.com/foo/bar
+          revision: 5c7110be
+        dist: src/stub
+    ```
 
 ## 초기화
 
@@ -59,6 +76,7 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 - 배포된 각 서비스를 로컬 프로세스 0번 포트에 바인딩 하여 임의로 할당한 뒤, 현재 프로세스 환경 변수에 바인딩
     - 가령 postgresql 서비스가 로컬 30423 포트에 바인딩 되었다면, POSTGRESQL_SERVICE_HOST는 localhost, POSTGRESQL_SERVICE_PORT는 30423
     - 해당 환경 변수는 어플리케이션을 실행하는 프로세스에만 바인딩
+- 의존성이 선언된 경우 의존하는 패키지들의 문서 및 RPC 스텁을 생성합니다.
 
 ## 배포
 
@@ -70,6 +88,9 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 - publish, build, push는 git 과 .cetus/cache 을 참조하여 캐시, 빌드, 버전을 결정
     - 버전은 (branch)-(8 length git hash) 이다. 예시 master-1we09e41
     - 기본 동작은 git에 커밋된 코드만 빌드하지만 --force 플래그를 사용하면 커밋되지 않은 코드를 포함하며 버전 +(revision)이 붙음. 예시 master-1we09e41+1
+    - build, pre-build:
+        - images에 선언된대로 이미지를 빌드
+        - 의존성이 선언된 경우 의존하는 패키지들의 문서 및 RPC 스텁을 생성
 - cetus test
     - cetus.yaml에 명시한 테스트를 수행
 
