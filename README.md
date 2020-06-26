@@ -15,6 +15,7 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 ## 명시적인 설정
 
 - 아래 정보는 \<project root\>/cetus.yaml 파일에 개발자가 작성
+- name: 패키지 이름
 - images: build 명령어 실행시 빌드될 이미지 정보
     - before, after 훅을 선언하여 빌드 및 후처리를 할 수 있음
 - services: 배포될 서비스들(k8s deployment + service로 구성)
@@ -32,8 +33,7 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
     # other cetus.yaml
     resources:
       - name: stub
-        type: grpc 
-        path:
+        glob:
           - src/**/*.proto
     --- 
     # my cetus.yaml
@@ -41,7 +41,8 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
       - source:
           git: https://github.com/foo/bar
           revision: 5c7110be
-        dist: src/stub
+        dist: src/proto
+    # copy 'src/**/*.proto' to 'src/proto/{other pacakge name}/**/*.proto
     ```
 
 ## 초기화
