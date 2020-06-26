@@ -32,17 +32,25 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
     ```yaml
     # other cetus.yaml
     resources:
-      - name: stub
+      - name: rpc
+        type: grpc-stub
         glob:
           - src/**/*.proto
+      - name: api
+        type: swagger-codegen
+        glob:
+          - src/api-spec/*.yaml
     --- 
     # my cetus.yaml
     dependencies:
       - source:
           git: https://github.com/foo/bar
           revision: 5c7110be
-        dist: src/proto
-    # copy 'src/**/*.proto' to 'src/proto/{other pacakge name}/**/*.proto
+        dist: lib
+    # java: 'libs/{package name}-{resource name}.jar' // import cloud.cetus.{package name}.{resource name}.*
+    # node: 'node_modules/@cetus/{package name}/{resource name}' // import stub from '@cetus/{package name}/{resource name}'
+    # 예) java: 'libs/bar-rpc.jar' // import cloud.cetus.bar.rpc.*
+    # 예) node: 'node_modules/@cetus/bar/rpc' // import stub from '@cetus/bar/rpc'
     ```
 
 ## 초기화
@@ -55,7 +63,7 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
     - 설치시 대화형으로 어드민 계정/비밀번호를 입력
     - --domain 옵션에 도메인을 제공하면 제공된 URL로 cetus 대시보드에 접근 가능
     - --domain 을 지정하지 않더라도 아래와 같이 임의의 도메인이 제공
-        - 예) https://5c7110be.cetus.dev
+        - 예) https://5c7110be.cetus.cloud
     - 대시보드에서는 인증, 인가, 스페이스, 모니터링, 롤백, 로그 등 통합적인 관리 기능을 제공
 
 ### 프로젝트 초기화
@@ -66,7 +74,7 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 - git이 초기화되어 있지 않다면 git init을 수행하고 .gitignore 파일에 .cetus/cache 를 추가
 - 예) cetus space add staging https://5c7110be.cetus.dev/wickedev/bookinfo
     - 배포시 클러스터 내에서는 wickedev--bookinfo k8s 네임스페이스를 가짐
-- 예) cetus space add prod https://5c7110be.cetus.dev/demo/bookinfo
+- 예) cetus space add prod https://5c7110be.cetus.cloud/demo/bookinfo
     - 배포시 클러스터 내에서는 demo--bookinfo k8s 네임스페이스를 가짐
 
 ## 개발
@@ -83,7 +91,7 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 
 - cetus deploy [alias | space url]
 - cetus deploy staging
-- cetus deploy https://5c7110be.cetus.dev/demo/bookinfo
+- cetus deploy https://5c7110be.cetus.cloud/demo/bookinfo
 - deploy 호출 시 인증 정보를 요구 할 수 있다. 인증은 user + password 혹은 token(base65 encoded x509)
 - deploy 호출 전에 이미지 publish(build, push), 호출 후에는 test가 불려지며 실패할 경우 rollback이 수행
 - publish, build, push는 git 과 .cetus/cache 을 참조하여 캐시, 빌드, 버전을 결정
@@ -120,7 +128,7 @@ cetus는 배포 환경(인프라)와 개발 환경(프로젝트)를 각각 초�
 - cetus curl (-n [alias]) [url]
     - 클러스터 URL(svc.cluster.local) 혹은 도메인으로 클러스터 내부에 curl을 수행
     - 예) cetus curl http://bookinfo.wickedev--bookinfo.svc.cluster.local
-    - 예) cetus curl https://staging.bookinfo.5c7110be.cetus.dev
+    - 예) cetus curl https://staging.bookinfo.5c7110be.cetus.cloud
     - 예) cetus curl -n wickedev/bookinfo BOOKINFO_SERVICE_HOST
     - 예) cetus curl -n staging BOOKINFO_SERVICE_HOST:8080
 
