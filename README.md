@@ -16,10 +16,26 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 
 - 아래 정보는 \<project root\>/cetus.yaml 파일에 개발자가 작성
 - name: 패키지 이름
+- scope: 다른 프로젝트에 참조되어 배포될 기본 스코프를 명시할 수 있음 (dependencies 항목 참조)
 - images: build 명령어 실행시 빌드될 이미지 정보
     - before, after 훅을 선언하여 빌드 및 후처리를 할 수 있음
 - services: 배포될 서비스들(k8s deployment + service로 구성)
 - dependencies: 의존성을 가지는 외부 서비스(git, path 참조를 지원)
+    - 의존성이 명시되어 있지 않을 경우 그룹인 경우 현재 그룹의 스코프(scope)를 가지며, 개인인 경우 프로젝트 스코프를 가짐
+    - 참조하는 의존성에 스코프가 명시되어 있을 경우 해당 스코프를 따름
+    - 스코프를 명시할 경우 다른 그룹/사용자를 참조하게 됨
+    - 기본 세팅으로 shared라는 그룹이 자동 생성되어 모든 사용자에게 열려있으며, 어드민이 관리 권한을 가짐
+    - shared 그룹은 필수 요소는 아니며 이름 변경, 삭제, 권한 설정이 가능
+    ```yaml
+    dependencies:
+      - source:
+          git: https://github.com/wickedev/recommender
+          revision: 31b0de1f
+      - source:
+          git: https://github.com/cetus/message-queue
+          revision: 31b0de1f
+        scope: shared
+    ```
 - profiles: patch(rfc6902), replace를 지원하여 cetus.yaml의 값들을 수정하여 배포
     - cetus space set profile [alias] [profile name] // 암묵적 바인딩
     - cetus dev set profile [alias] [profile name] // 암묵적 바인딩
