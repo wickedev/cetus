@@ -4,6 +4,25 @@
 
 Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게 더 나은 UX를 제공하는 통합 컨테이너 환경(Integrated Container Environment)으로써 운영 측면에서는 쿠버네티스에서 기본적으로 제공하는 기능 이외에 유저/그룹 별 멀티테넌시(CaaS multitenancy model 2), 인증/인가(OIDC 지원), 모니터링, 로깅, 트레이싱, 네트워크 토폴로지, 다양한 배포(A/B 테스팅, 카나리, Blue/Green), 서킷 브레이커, 인위적 장애 주입, 이미지 레지스트리, 승인 제어(Admission Control), 정책 제어(Policy Control), 쉬운 노드/스토리지 추가/삭제, 백업/복구를 제공하며, 개발 측면에서는 로컬 개발과 배포 환경의 간극을 줄이고, 다른 개발자가 작성한 서비스를 의존성으로 추가하여 MSA 개발 및 배포를 쉽게하고, API(grpc, thrift, openapi) 스텁 자동 생성, 직관적인 개발/배포 설정(cetus.yaml), 로깅 및 트레이싱 및 로컬 UI를 통해 버그를 쉽게 추적하여 수정할 수 있도록 합니다.
 
+## 대시보드
+
+- 유저/그룹 별 멀티테넌시(CaaS multitenancy model 2)
+    - github, gitlab의 그룹/유저/프로젝트와 유사한 구조
+    - Hierarchical Namespace(HNS)를 통해 구현
+        - 컨피그맵, 시크릿 자동 전파
+    - group--(group name): parent ns
+    - user--(user name): parent ns
+    - (group name | user name)--(project name): child ns
+    - 예) group--mygroup, mygroup--chat (HNS로 부모/자식으로 바인딩)
+- 인증/인가(OIDC 지원): dex
+- 모니터링: prometheus
+- 로깅: fluentd, elasticsearch
+- 트레이싱: jaeger collector
+- 네트워크 토폴로지, 다양한 배포, 서킷 브레이커, 인위적 장애 주입: istio
+- 이미지 레지스트리: harbor
+- 정책 제어(Policy Control): gatekeeper
+- 백업/복구: VolumeSnapshot
+    
 ## 암묵적인 컨텍스트
 
 - 아래 정보는 프로젝트의 .cetus/config에 저장
