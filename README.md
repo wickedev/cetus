@@ -7,7 +7,7 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 ## 대시보드
 
 - 유저/그룹 별 멀티테넌시(CaaS multitenancy model 2)
-    - github, gitlab의 그룹/유저/프로젝트와 유사한 구조
+    - github, gitlab의 [그룹|유저]/프로젝트와 유사한 구조
     - Hierarchical Namespace(HNS)를 통해 구현
         - 컨피그맵, 시크릿 자동 전파
     - group--(group name): parent ns
