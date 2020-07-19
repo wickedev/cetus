@@ -63,7 +63,7 @@ Cetus는 쿠버네티스를 빌딩 블록 삼아 개발자와 운영자들에게
 - test: 배포 후 확인 커맨드 실행. 실패할 경우 기존 버전으로 rollback
 - vars: file, env, stdin 입력을 받아 cetus.yaml 내에서 사용
 - ingress: 외부에서 domain으로 서비스에 접근
-- rollback: 롤백시 수행되어야 하는 Job
+- hooks: 이미지 빌드, 배포, 롤백 등 이벤트가 발생하기 전/후로 훅을 실행
 - resources: 다른 패키지에 의존성으로 제공 될 API 명세
     ```yaml
     # other cetus.yaml
